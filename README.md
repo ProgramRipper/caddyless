@@ -27,7 +27,7 @@ caddy trust
 - Install caddyless:
 
 ```sh
-curl https://raw.githubusercontent.com/ProgramRipper/caddyless/refs/heads/master/caddyless.py -o ~/.local/bin/caddyless
+curl https://raw.githubusercontent.com/ProgramRipper/caddyless/refs/heads/master/caddyless/__main__.py -o ~/.local/bin/caddyless
 chmod +x ~/.local/bin/caddyless
 
 # Or with uv
@@ -39,15 +39,15 @@ uv tool install git+https://github.com/ProgramRipper/caddyless.git
 For app that respects `$PORT` environment variable, just run:
 
 ```sh
-# *.localhost domain
+# Explicit name
 caddyless myapp nuxt dev
 # -> https://myapp.localhost
 
-# Any other domain
-caddyless localhost nuxt dev
-# -> https://localhost
+# Subdomains
+caddyless api.myapp nuxt dev
+# -> https://api.myapp.localhost
 
-# Maybe requires hosts configuration
+# Any other domains (requires hosts configuration)
 caddyless example.com nuxt dev
 # -> https://example.com
 ```

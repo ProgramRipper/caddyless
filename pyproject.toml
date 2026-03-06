@@ -1,17 +1,16 @@
 [project]
 name = "caddyless"
-version = "0.1.0"
+version = "0.1.1"
 description = "An alternative to vercel-labs/portless based on Caddy"
 authors = [
     {name = "ProgramRipper", email = "programripper@foxmail.com"},
 ]
-dependencies = []
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-caddyless = "caddyless:__main__"
+caddyless = "caddyless.__main__:__main__"
 
 [build-system]
 requires = ["pdm-backend"]
