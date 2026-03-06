@@ -39,6 +39,10 @@ uv tool install git+https://github.com/ProgramRipper/caddyless.git
 For app that respects `$PORT` environment variable, just run:
 
 ```sh
+# Auto-infer name from git / directory
+caddyless run nuxt dev
+# -> https://<project>.localhost
+
 # Explicit name
 caddyless myapp nuxt dev
 # -> https://myapp.localhost
@@ -55,13 +59,13 @@ caddyless example.com nuxt dev
 For app thats specify port by argument or flag, use placeholder `'$PORT'` (single quotes are required to prevent shell expansion):
 
 ```sh
-caddyless myapp python -m http.server '$PORT'
+caddyless run python -m http.server '$PORT'
 
-caddyless myapp uvicorn main:app --port '$PORT'
+caddyless run uvicorn main:app --port '$PORT'
 ```
 
 For app that doesn't support custom port, set `$PORT` environment variable:
 
 ```sh
-PORT=8000 caddyless myapp python -m http.server
+PORT=8000 caddyless run python -m http.server
 ```

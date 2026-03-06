@@ -9,6 +9,8 @@ import sys
 from argparse import REMAINDER, ArgumentParser
 from collections import defaultdict
 from contextlib import suppress
+from itertools import chain
+from pathlib import Path
 from random import randint
 from typing import Any, NoReturn
 from urllib.request import Request, urlopen
@@ -65,7 +67,7 @@ def sanitize_host(host: str) -> str:
         label = label.strip("-")
         if label:
             labels.append(label)
-    return ".".join(labels)
+    return ".".join(labels) if labels else "localhost"
 
 
 def check_host(host: str) -> None:
@@ -110,13 +112,34 @@ def init_config(config: Any) -> None:
         policies.insert(0, policy)
 
 
-def main(name: str, cmd: list[str]) -> NoReturn:
-    if name == "run":
-        raise  # TODO
-    else:
-        host = name
-        check_host(host)
+def get_project_name():
+    pwd = Path().resolve()
 
+    for path in chain([pwd], pwd.parents):
+        git = path / ".git"
+
+        if git.is_dir():
+            return path.name
+
+        if git.is_file():
+            gitdir = git / git.read_text().removeprefix("gitdir:").strip()
+            commondir = gitdir / "commondir"
+            if not commondir.exists():
+                return path.name
+
+            path = (gitdir / commondir.read_text().strip()).resolve().parent
+            head = (gitdir / "HEAD").read_text().strip()
+            if head.startswith("ref:"):
+                return f"{head.rsplit('/', 1)[-1]}.{path.name}"
+
+            return path.name
+
+    return pwd.name
+
+
+def main(name: str, cmd: list[str]) -> NoReturn:
+    host = sanitize_host(get_project_name()) if name == "run" else name
+    check_host(host)
     if not check_tld(host):
         host += ".localhost"
 
